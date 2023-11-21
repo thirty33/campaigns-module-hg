@@ -33,6 +33,7 @@ def create_custom_model(
     token: str = ''
 ):
     # Convert pydantic model to dict
+    tableClient.set_table(os.environ.get('table_transaction_name'))
     transaction_dict = transaction.model_dump()
 
     transaction_dict = convert_dict_values_to_string(transaction_dict)
@@ -48,6 +49,7 @@ def list_custom_model(
     params: ParamsModel = Depends(),
     sub: str = Depends(get_current_user),
 ):
+    tableClient.set_table(os.environ.get('table_transaction_name'))
     filters = params.model_dump()
     filters.pop('token', None)
     
@@ -55,6 +57,7 @@ def list_custom_model(
 
 @app.delete('/information-request/delete/{id}', tags=['Information Request'])
 def delete_custom_model(id: str, sub: str = Depends(get_current_user), token: str = ''):
+    tableClient.set_table(os.environ.get('table_transaction_name'))
     return tableClient.delete_item(id)
 
 @app.put('/information-request/update/{id}', tags=['Information Request'], response_model=dict)
@@ -64,6 +67,7 @@ def update_custom_model(
     sub: str = Depends(get_current_user),
     token: str = ''
 ):
+    tableClient.set_table(os.environ.get('table_transaction_name'))
     transaction_dict = transaction.model_dump()
     transaction_dict = convert_dict_values_to_string(transaction_dict)
     return tableClient.update_item(id, transaction_dict);
