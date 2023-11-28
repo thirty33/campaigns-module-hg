@@ -4,6 +4,7 @@ useDotenv: true
 
 
 provider:
+  timeout: 900
   name: aws
   runtime: python3.8
   stage: ${opt:stage, 'dev'}
@@ -32,9 +33,9 @@ provider:
   
 plugins:
   - serverless-dotenv-plugin
-  - serverless-dynamodb
   - serverless-ignore
   - serverless-python-requirements
+  - serverless-dynamodb
   - serverless-offline
 package:
   individually: true
