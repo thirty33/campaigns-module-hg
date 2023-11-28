@@ -36,9 +36,20 @@ class SingletonMeta(type):
 class AuthClient(metaclass=SingletonMeta):
 
     def instance(self):
+        
+        IS_OFFLINE = os.getenv('IS_OFFLINE', False)
+        if IS_OFFLINE:
+            boto3.Session(
+                aws_access_key_id=os.environ['AWS_ACCESS_KEY_ID'],
+                aws_secret_access_key=os.environ['AWS_SECRET_ACCESS_KEY'],
+                aws_session_token=os.environ['AWS_SESSION_TOKEN']
+            )
+
         self.client = boto3.client('cognito-idp', region_name=os.getenv('AWS_REGION', False))
         self.user_pool_id = os.getenv('user_pool_id', False)
         self.client_id = os.getenv('client_id', False)
+
+        IS_OFFLINE = os.getenv('IS_OFFLINE', False)
 
     def serialize_datetime(self, obj): 
         if isinstance(obj, datetime.datetime): 
@@ -126,6 +137,9 @@ class AuthClient(metaclass=SingletonMeta):
 
     def admin_initiate_auth(self, username, password):
         try:
+            print('init request', self.user_pool_id)
+            print('init request', self.client_id)
+            boto3.set_stream_logger('')
             response = self.client.admin_initiate_auth(
                 UserPoolId=self.user_pool_id,
                 ClientId=self.client_id,
@@ -136,6 +150,8 @@ class AuthClient(metaclass=SingletonMeta):
                 }
             )
             return response
+        except self.client.exceptions.RequestTimeoutException as rte:
+            print("Request has been timed out. This might be caused by a server-side issue. HTTP Status Code: 504")
         except ClientError as err:
             raise err
     

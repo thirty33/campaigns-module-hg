@@ -96,9 +96,9 @@ class TableClient(metaclass=SingletonMeta):
             attribute_values = {}
             for key in filtersObject.keys():
                 if filtersObject[key] is not None:
-                    if key != 'Title' and key != 'DateTransaction' and key != 'page':
+                    if key != 'Title' and key != 'DateTransaction' and key != 'page' and key != 'Uid':
                         filter_expressions.append(f"{key} = :{key}")
-                    if key != 'DateTransaction' and key != 'page':
+                    if key != 'DateTransaction' and key != 'page'  and key != 'Uid':
                         attribute_values[f":{key}"] = filtersObject[key]
 
             query_params_set["FilterExpression"] = " AND ".join(filter_expressions)
@@ -124,6 +124,7 @@ class TableClient(metaclass=SingletonMeta):
                 self.exclusiveStartKey = {
                     "DateTransaction": filtersObject['DateTransaction'],
                     "Title": filtersObject['Title'],
+                    "Uid": filtersObject['Uid'],
                 }
 
             print('self.exclusiveStartKey', self.exclusiveStartKey)

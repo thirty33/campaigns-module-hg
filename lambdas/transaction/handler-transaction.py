@@ -101,7 +101,9 @@ def create_user(
 def login_user(
     login_request: LoginRequest = Depends()
 ):
+    print('response one')
     response = authClient.admin_initiate_auth(login_request.email, login_request.password)
+    print('response two')
     return tableClient.manage_sucessfull_response(response)
     # print('test', os.environ.get('user_transaction_name'))
     # tableClient.set_table(os.environ.get('user_transaction_name'))

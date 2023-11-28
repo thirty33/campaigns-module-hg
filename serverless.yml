@@ -4,16 +4,17 @@ useDotenv: true
 
 
 provider:
+  timeout: 900
   name: aws
   runtime: python3.8
   stage: ${opt:stage, 'dev'}
   region: ${opt:region, 'us-west-2'}
   architecture: x86_64
   environment:
-    user_pool_id: { Ref: UserPool }
-    client_id: { Ref: UserClient }
-    table_transaction_name: CampaignTransaction
-    user_transaction_name: CampaignUser
+    # user_pool_id: { Ref: UserPool }
+    # client_id: { Ref: UserClient }
+    # table_transaction_name: CampaignTransaction
+    # user_transaction_name: CampaignUser
   iam:
     role:
       statements:
@@ -32,9 +33,9 @@ provider:
   
 plugins:
   - serverless-dotenv-plugin
-  - serverless-dynamodb
   - serverless-ignore
   - serverless-python-requirements
+  - serverless-dynamodb
   - serverless-offline
 package:
   individually: true
