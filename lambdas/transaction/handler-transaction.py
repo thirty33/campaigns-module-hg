@@ -8,17 +8,24 @@ from mangum import Mangum
 import uuid
 import json
 from typing import Dict
-
+from fastapi.middleware.cors import CORSMiddleware
 
 STAGE = os.environ.get('STAGE')
 root_path = '/' if not STAGE else f'/{STAGE}'
-
 
 app = FastAPI(
     title="Campaigns Module Api",
     debug=False,
     version="1.0.0",
     root_path=root_path
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[os.environ.get('FRONT_URL')],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 def convert_dict_values_to_string(input_dict: Dict) -> Dict:
@@ -29,8 +36,8 @@ def convert_dict_values_to_string(input_dict: Dict) -> Dict:
 @app.post('/information-request/create', tags=['Information Request'])
 def create_custom_model(
     transaction: Transaction,
-    sub: str = Depends(get_current_user),
-    token: str = ''
+    # sub: str = Depends(get_current_user),
+    # token: str = ''
 ):
     # Convert pydantic model to dict
     tableClient.set_table(os.environ.get('table_transaction_name'))
@@ -47,7 +54,7 @@ def create_custom_model(
 @app.get('/information-request/list', tags=['Information Request'])
 def list_custom_model(
     params: ParamsModel = Depends(),
-    sub: str = Depends(get_current_user),
+    # sub: str = Depends(get_current_user),
 ):
     tableClient.set_table(os.environ.get('table_transaction_name'))
     filters = params.model_dump()
