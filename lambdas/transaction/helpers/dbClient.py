@@ -127,9 +127,9 @@ class TableClient(metaclass=SingletonMeta):
                     "Uid": filtersObject['Uid'],
                 }
 
-            print('self.exclusiveStartKey', self.exclusiveStartKey)
-            if self.exclusiveStartKey:
-                query_params['ExclusiveStartKey'] = self.exclusiveStartKey
+                print('self.exclusiveStartKey', self.exclusiveStartKey)
+                if self.exclusiveStartKey:
+                  query_params['ExclusiveStartKey'] = self.exclusiveStartKey
 
             response = self.table.query(**query_params)
 
