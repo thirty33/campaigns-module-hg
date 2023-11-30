@@ -15,6 +15,7 @@ provider:
     client_id: { Ref: UserClient }
     table_transaction_name: CampaignTransaction
     user_transaction_name: CampaignUser
+    FRONT_URL: ${env:FRONT_URL}
   iam:
     role:
       statements:
@@ -99,8 +100,8 @@ resources:
             Projection:
               ProjectionType: ALL
         ProvisionedThroughput:
-          ReadCapacityUnits: 1
-          WriteCapacityUnits: 1
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
     CampaignUser:
       Type: AWS::DynamoDB::Table
       Properties:
