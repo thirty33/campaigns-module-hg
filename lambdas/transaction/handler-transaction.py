@@ -28,10 +28,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 def convert_dict_values_to_string(input_dict: Dict) -> Dict:
     for key, value in input_dict.items():
         input_dict[key] = str(value)
     return input_dict
+
 
 @app.post('/information-request/create', tags=['Information Request'])
 def create_custom_model(
@@ -44,40 +46,43 @@ def create_custom_model(
     transaction_dict = transaction.model_dump()
 
     transaction_dict = convert_dict_values_to_string(transaction_dict)
-    
+
     # Add Uid to the dictionary
     transaction_dict["Uid"] = str(uuid.uuid4())
-    
+
     return tableClient.put_item(item=transaction_dict)
 
 
 @app.get('/information-request/list', tags=['Information Request'])
 def list_custom_model(
     params: ParamsModel = Depends(),
-    # sub: str = Depends(get_current_user),
+    sub: str = Depends(get_current_user),
+    token: str = ''
 ):
     tableClient.set_table(os.environ.get('table_transaction_name'))
     filters = params.model_dump()
     filters.pop('token', None)
-    
+
     return tableClient.get_item(filters)
+
 
 @app.delete('/information-request/delete/{id}', tags=['Information Request'])
 def delete_custom_model(id: str, sub: str = Depends(get_current_user), token: str = ''):
     tableClient.set_table(os.environ.get('table_transaction_name'))
     return tableClient.delete_item(id)
 
+
 @app.put('/information-request/update/{id}', tags=['Information Request'], response_model=dict)
 def update_custom_model(
     id: str,
-    transaction: Transaction, 
+    transaction: Transaction,
     sub: str = Depends(get_current_user),
     token: str = ''
 ):
     tableClient.set_table(os.environ.get('table_transaction_name'))
     transaction_dict = transaction.model_dump()
     transaction_dict = convert_dict_values_to_string(transaction_dict)
-    return tableClient.update_item(id, transaction_dict);
+    return tableClient.update_item(id, transaction_dict)
 
 
 @app.post('/user/create', tags=['user'])
@@ -86,8 +91,9 @@ def create_user(
 ):
     tableCLientResponse = {}
     data_dict = {}
-    createUserResponse = authClient.admin_create_user(login_request.email, login_request.password)
-    
+    createUserResponse = authClient.admin_create_user(
+        login_request.email, login_request.password)
+
     if createUserResponse['status_code'] and createUserResponse['status_code'] >= 200 and createUserResponse['status_code'] < 204:
         tableClient.set_table(os.environ.get('user_transaction_name'))
         tableCLientResponse = tableClient.put_item(item={
@@ -104,12 +110,14 @@ def create_user(
     }
     return tableClient.manage_sucessfull_response(data, 201)
 
+
 @app.get('/user/login', tags=['user'])
 def login_user(
     login_request: LoginRequest = Depends()
 ):
     print('response one')
-    response = authClient.admin_initiate_auth(login_request.email, login_request.password)
+    response = authClient.admin_initiate_auth(
+        login_request.email, login_request.password)
     print('response two')
     return tableClient.manage_sucessfull_response(response)
     # print('test', os.environ.get('user_transaction_name'))
@@ -119,6 +127,6 @@ def login_user(
     #     "Email": email,
     #     "Uid": uid
     # })
-    
+
 
 handler = Mangum(app)
