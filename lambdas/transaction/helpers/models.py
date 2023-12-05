@@ -47,7 +47,7 @@ class Transaction(BaseModel):
     Category: Optional[str] = Field(min_length=1, max_length=10)
     Bank: Optional[str] = Field(min_length=1, max_length=10)
     DateTransaction: Optional[str] = Field(min_length=5, max_length=100)
-    Description: Optional[str] = Field(min_length=5, max_length=255)
+    Description: Optional[str] = Field(min_length=0, max_length=255)
     nombreApellido: Optional[str]
     email: Optional[str]
     genero: Optional[str]
