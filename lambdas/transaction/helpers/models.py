@@ -51,12 +51,14 @@ class Transaction(BaseModel):
     nombreApellido: Optional[str]
     email: Optional[str]
     genero: Optional[str]
+    Telefono: Optional[str]
     numeroTelefonico: Optional[str]
     ciudadOrigen: Optional[str]
     ciudadDestino: Optional[str]
     tipoViaje: Optional[str]
     fechaSalida: datetime
     fechaRegreso: datetime
+    optionViaje: Optional[str]
     recibirCotizacion: Optional[str]
 
     class Config:
@@ -74,12 +76,14 @@ class Transaction(BaseModel):
                 "nombreApellido": "dasd",
                 "email": "test@test.com",
                 "genero": "masculino",
+                "Telefono": "+51",
                 "numeroTelefonico": "213123122",
                 "ciudadOrigen": "dsads",
                 "ciudadDestino": "dasdsa",
                 "tipoViaje": "Viaje de ida",
                 "fechaSalida": "2023-01-01 10:30:50",
                 "fechaRegreso": "2023-02-27 20:30:50",
+                "optionViaje": "Plan completo (vuelos, hotel y tours)",
                 "recibirCotizacion": "WhatsApp",
             }
         }
@@ -121,12 +125,14 @@ class ParamsModel(BaseModel):
     nombreApellido: Optional[str] = None
     email: Optional[str] = None
     genero: Optional[str] = None
+    Telefono: Optional[str] = None
     numeroTelefonico: Optional[str] = None
     ciudadOrigen: Optional[str] = None
     ciudadDestino: Optional[str] = None
     tipoViaje: Optional[str] = None
     fechaSalida: Optional[str] = None
     fechaRegreso: Optional[str] = None
+    optionViaje: Optional[str] = None
     recibirCotizacion: Optional[str] = None
     page: Optional[str] = '1'
     token: Optional[str] = 'eyJraWQiOiJ0OFdqUTRreW1YTjZpcGRCRmpucWRZemZwQXM2bndWRFZwd3FaT3A2YzMwPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiI4ODcwYWZjMC0xNjE0LTRiOWUtOTU3ZC01MDc3NDk2MjIyZTUiLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAudXMtd2VzdC0yLmFtYXpvbmF3cy5jb21cL3VzLXdlc3QtMl9IeVhBc2N4NGkiLCJjbGllbnRfaWQiOiI3NDRwdW90b29jYzh2bnQ0bGQ0aGdpc2drZyIsIm9yaWdpbl9qdGkiOiI1YTZkODFkOS00YTljLTRkOGMtYWQ3OS05NDEyNmMyZWFiYzIiLCJldmVudF9pZCI6IjFlMGQyOGZkLTM1MjMtNGQ5OS04MjY5LWI0MDJiZjk3ZjMxZiIsInRva2VuX3VzZSI6ImFjY2VzcyIsInNjb3BlIjoiYXdzLmNvZ25pdG8uc2lnbmluLnVzZXIuYWRtaW4iLCJhdXRoX3RpbWUiOjE3MDAzMTY0OTksImV4cCI6MTcwMDMzNDQ5OSwiaWF0IjoxNzAwMzE2NDk5LCJqdGkiOiI4M2JlZGU3MC1lOWNjLTQ0ZDUtODg3NC00OTJiOGE4YzkzMzMiLCJ1c2VybmFtZSI6ImpvZWxsQHRlc3QuY28ifQ.bSDmxwC7cofzlyege4fSto0QWP0vCYsy6nVBCtrLzTQLypYii_FWpbyUUe7wgMDPKTTQue23K49nJyhID3LC92ubNLAMpdIhZFNKIzqgwUGKAVjwH6XZ5K_C7GxGGO4TY0n1YQNHJ_UncTybUAoAArk219JaDfyOicTQEn4WUySy1OqPBw7oauruKLZspbAhtee9NVUUdshzwsEiM0cO0NDUVlTsw1yUghhxfqLIIW2vjxG2tJND-pFcJbokjPMawk5-avpVECaIUW_v_KtO_nLp6vxwjHvuM53ON0OZPGWyTvnuGaeDK8qygdBUoWS1oEO7GzJDh9MebLL9vLz0-A'
