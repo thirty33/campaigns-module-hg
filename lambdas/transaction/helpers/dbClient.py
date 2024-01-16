@@ -97,8 +97,11 @@ class TableClient(metaclass=SingletonMeta):
             for key in filtersObject.keys():
                 if filtersObject[key] is not None:
                     if key != 'Title' and key != 'DateTransaction' and key != 'page' and key != 'Uid':
-                        filter_expressions.append(f"{key} = :{key}")
-                    if key != 'DateTransaction' and key != 'page'  and key != 'Uid':
+                    # if key != 'Title'  and key != 'page' and key != 'Uid':
+                        # filter_expressions.append(f"{key} = :{key}")
+                        filter_expressions.append(f"contains({key},:{key})")
+                    # if key != 'DateTransaction' and key != 'page'  and key != 'Uid':
+                    if key != 'page'  and key != 'Uid':
                         attribute_values[f":{key}"] = filtersObject[key]
 
             query_params_set["FilterExpression"] = " AND ".join(filter_expressions)
@@ -107,19 +110,24 @@ class TableClient(metaclass=SingletonMeta):
             projection_keys = [key for key in filtersObject.keys() if key != 'page']
             if 'Uid' not in projection_keys:
                 projection_keys.append('Uid')
+
+            print('this is DateTransaction', filtersObject['DateTransaction'])
+
+            if filtersObject['DateTransaction'] is not None:
+                key_condition_expression = 'Title = :Title AND begins_with(DateTransaction, :DateTransaction)'
+            else:
+                key_condition_expression = 'Title = :Title'
             
             query_params = {
                 'IndexName': 'DateIndex',
-                'KeyConditionExpression': 'Title = :Title',
+                'KeyConditionExpression': key_condition_expression,
                 'FilterExpression': query_params_set["FilterExpression"],
                 'ExpressionAttributeValues': query_params_set["ExpressionAttributeValues"],
                 'ScanIndexForward': False,
                 'ProjectionExpression': ", ".join(projection_keys),
-                'Limit': 5,  # Cantidad de elementos por página
+                'Limit': 5,
             }
-
-            print('query_params_test', query_params)
-
+            
             if filtersObject['page'] != '1':
                 self.exclusiveStartKey = {
                     "DateTransaction": filtersObject['DateTransaction'],
@@ -127,16 +135,11 @@ class TableClient(metaclass=SingletonMeta):
                     "Uid": filtersObject['Uid'],
                 }
 
-                print('self.exclusiveStartKey', self.exclusiveStartKey)
                 if self.exclusiveStartKey:
                   query_params['ExclusiveStartKey'] = self.exclusiveStartKey
 
             response = self.table.query(**query_params)
-
-            print('response', response)
-
-            print('LastEvaluatedKey', response.get('LastEvaluatedKey', ''))
-
+            
             result = {
                 'Items': json.loads(json.dumps(response.get('Items', []), default=self.decimal_default)),
             }
