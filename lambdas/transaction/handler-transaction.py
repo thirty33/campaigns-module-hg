@@ -11,6 +11,7 @@ from typing import Dict
 from fastapi.middleware.cors import CORSMiddleware
 
 STAGE = os.environ.get('STAGE')
+QUEUE_URL = os.environ.get('QUEUE_URL')
 root_path = '/' if not STAGE else f'/{STAGE}'
 
 app = FastAPI(
