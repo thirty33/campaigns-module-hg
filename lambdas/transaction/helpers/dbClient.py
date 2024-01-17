@@ -100,8 +100,8 @@ class TableClient(metaclass=SingletonMeta):
                     # if key != 'Title'  and key != 'page' and key != 'Uid':
                         # filter_expressions.append(f"{key} = :{key}")
                         filter_expressions.append(f"contains({key},:{key})")
-                    # if key != 'DateTransaction' and key != 'page'  and key != 'Uid':
-                    if key != 'page'  and key != 'Uid':
+                    if key != 'DateTransaction' and key != 'page'  and key != 'Uid':
+                    # if key != 'page'  and key != 'Uid':
                         attribute_values[f":{key}"] = filtersObject[key]
 
             query_params_set["FilterExpression"] = " AND ".join(filter_expressions)
@@ -110,11 +110,10 @@ class TableClient(metaclass=SingletonMeta):
             projection_keys = [key for key in filtersObject.keys() if key != 'page']
             if 'Uid' not in projection_keys:
                 projection_keys.append('Uid')
-
-            print('this is DateTransaction', filtersObject['DateTransaction'])
-
-            if filtersObject['DateTransaction'] is not None:
-                key_condition_expression = 'Title = :Title AND begins_with(DateTransaction, :DateTransaction)'
+            
+            if filtersObject['DateTransaction'] is not None and filtersObject['page'] == '1':
+                key_condition_expression = f"Title = :Title AND begins_with(DateTransaction, :DateTransaction)"
+                query_params_set["ExpressionAttributeValues"][':DateTransaction'] = filtersObject['DateTransaction']
             else:
                 key_condition_expression = 'Title = :Title'
             
@@ -128,6 +127,8 @@ class TableClient(metaclass=SingletonMeta):
                 'Limit': 5,
             }
             
+            print('query_params', query_params)
+
             if filtersObject['page'] != '1':
                 self.exclusiveStartKey = {
                     "DateTransaction": filtersObject['DateTransaction'],
