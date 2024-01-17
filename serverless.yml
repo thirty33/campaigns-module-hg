@@ -37,6 +37,7 @@ constructs:
         type: queue
         worker:
             handler: lambdas/sendEmail/handler.sendEmail
+            timeout: 7
             package:
               patterns:
                 - "lambdas/sendEmail/handler.py"
