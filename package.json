@@ -14,6 +14,7 @@
     "serverless-dotenv-plugin": "^6.0.0",
     "serverless-dynamodb": "^0.2.47",
     "serverless-ignore": "^0.2.1",
+    "serverless-lift": "^1.28.1",
     "serverless-offline": "^12.0.4",
     "serverless-offline-python": "^3.22.3",
     "serverless-python-requirements": "^6.0.0"

@@ -31,6 +31,15 @@ provider:
             - cognito-idp:AdminCreateUser
             - cognito-idp:AdminSetUserPassword
           Resource: "*"
+
+constructs:
+    quote-message-queue:
+        type: queue
+        worker:
+            handler: lambdas/sendEmail/handler.sendEmail
+            package:
+              patterns:
+                - "lambdas/sendEmail/handler.py"
   
 plugins:
   - serverless-dotenv-plugin
@@ -38,6 +47,7 @@ plugins:
   - serverless-python-requirements
   - serverless-dynamodb
   - serverless-offline
+  - serverless-lift
 package:
   individually: true
   patterns:
@@ -149,6 +159,7 @@ functions:
     runtime: python3.8
     environment:
       STAGE: ${self:provider.stage}
+      QUEUE_URL: ${construct:quote-message-queue.queueUrl}
     layers:
       - { Ref: PythonRequirementsLambdaLayer }
     package:
