@@ -11,7 +11,7 @@ import json
 from typing import Dict
 from fastapi.middleware.cors import CORSMiddleware
 import resend
-from lambdas.sendEmail.template import export_html
+from lambdas.sendEmail.helpers.template import export_html
 
 resend.api_key = os.environ["RESEND_API_KEY"]
 STAGE = os.environ.get('STAGE')

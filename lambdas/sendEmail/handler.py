@@ -2,7 +2,7 @@ import boto3
 import json
 import os
 import resend
-from lambdas.sendEmail.template import export_html
+from lambdas.sendEmail.helpers.template import export_html
 
 resend.api_key = os.environ["RESEND_API_KEY"]
 FROM_EMAIL = os.environ.get('FROM_EMAIL')
