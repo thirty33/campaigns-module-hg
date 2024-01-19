@@ -17,6 +17,7 @@ provider:
     user_transaction_name: CampaignUser
     FRONT_URL: ${env:FRONT_URL}
     QUEUE_URL: ${construct:quote-message-queue.queueUrl}
+    # QUEUE_URL: https://sqs.us-west-2.amazonaws.com/005192990501/campaigns-module-hg-dev-quote-message-queue
     RESEND_API_KEY: ${env:RESEND_API_KEY}
     FROM_EMAIL: ${env:FROM_EMAIL}
     TO_EMAIL: ${env:TO_EMAIL}
@@ -43,11 +44,12 @@ constructs:
             handler: lambdas/sendEmail/handler.sendEmail
             layers:
               - { Ref: PythonRequirementsLambdaLayer }
-            timeout: 7
+            timeout: 10
             package:
               patterns:
                 - "lambdas/sendEmail/**"
-
+        maxRetries: 0
+        
 plugins:
   - serverless-dotenv-plugin
   - serverless-ignore
