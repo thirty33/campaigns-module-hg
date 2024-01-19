@@ -47,7 +47,7 @@ constructs:
             package:
               patterns:
                 - "lambdas/sendEmail/**"
-        maxRetries: 0
+        maxRetries: 1
 
 plugins:
   - serverless-dotenv-plugin
