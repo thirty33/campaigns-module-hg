@@ -41,6 +41,8 @@ constructs:
         type: queue
         worker:
             handler: lambdas/sendEmail/handler.sendEmail
+            layers:
+              - { Ref: PythonRequirementsLambdaLayer }
             timeout: 7
             package:
               patterns:
