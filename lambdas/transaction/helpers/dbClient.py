@@ -6,8 +6,9 @@ import decimal
 import os
 from fastapi.responses import HTMLResponse, JSONResponse
 from boto3.dynamodb.conditions import Attr
+from lambdas.transaction.helpers.sqsClient import sqsClient
 
-
+QUEUE_URL = os.environ.get('QUEUE_URL')
 class SingletonMeta(type):
     """
     The Singleton class can be implemented in different ways in Python. Some
@@ -78,7 +79,11 @@ class TableClient(metaclass=SingletonMeta):
             }
             response = self.table.put_item(**query_params)
             print('put_item', json.dumps(response, indent=2))
-            # return self.manage_sucessfull_response(response)
+            
+            print('QUEUE_URL', QUEUE_URL)
+            response = sqsClient.send_message(QUEUE_URL, json.dumps(item,indent=2))
+            print('response', response)
+
             return self.manage_sucessfull_response(item)
         except ClientError as err:
             return self.manage_failed_response(err)

@@ -310,6 +310,7 @@ Resources:
                       - sqs:UntagQueue
                       - sqs:Get*
                       - sqs:List*
+                      - sqs:sendmessage
                     Resource:
                       - !Sub 'arn:aws:sqs:${AWS::Region}:${AWS::AccountId}:example-project-*'
                       - !Sub 'arn:aws:sqs:${AWS::Region}:${AWS::AccountId}:campaigns-module-hg-*'

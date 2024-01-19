@@ -2,6 +2,7 @@
 import os
 from fastapi import FastAPI, Body, HTTPException, Path, Query, Depends, Request, security, status
 from lambdas.transaction.helpers.dbClient import tableClient
+from lambdas.transaction.helpers.sqsClient import sqsClient
 from lambdas.transaction.authClient import authClient, get_current_user
 from lambdas.transaction.helpers.models import Transaction, LoginRequest, User, ParamsModel
 from mangum import Mangum
@@ -9,9 +10,13 @@ import uuid
 import json
 from typing import Dict
 from fastapi.middleware.cors import CORSMiddleware
+import resend
+from lambdas.sendEmail.template import export_html
 
+resend.api_key = os.environ["RESEND_API_KEY"]
 STAGE = os.environ.get('STAGE')
-QUEUE_URL = os.environ.get('QUEUE_URL')
+FROM_EMAIL = os.environ.get('FROM_EMAIL')
+TO_EMAIL = os.environ.get('TO_EMAIL')
 root_path = '/' if not STAGE else f'/{STAGE}'
 
 app = FastAPI(
@@ -130,4 +135,25 @@ def login_user(
     # })
 
 
+@app.post('/test-message/send', tags=['message'])
+def send_message(
+    sub: str = Depends(get_current_user),
+    token: str = ''
+):
+    try:
+        body_string = '{\n  "Title": "quote",\n  "Category": "1",\n  "Bank": "1",\n  "DateTransaction": "2023-01-01 10:30:50",\n  "Description": "Description",\n  "nombreApellido": "dasd",\n  "email": "test@test.com",\n  "genero": "masculino",\n  "Telefono": "+51",\n  "numeroTelefonico": "213123122",\n  "ciudadOrigen": "dsads",\n  "ciudadDestino": "dasdsa",\n  "tipoViaje": "Viaje de ida",\n  "fechaSalida": "2023-01-01 10:30:50",\n  "fechaRegreso": "2023-02-27 20:30:50",\n  "optionViaje": "Plan completo (vuelos, hotel y tours)",\n  "recibirCotizacion": "WhatsApp",\n  "amountPersons": "1",\n  "Uid": "179320c2-7b3b-4195-aaed-a6ef32e2033b"\n}'
+        object_element = json.loads(body_string)
+
+        responseEmail = resend.Emails.send({
+            "from": FROM_EMAIL,
+            "to": TO_EMAIL,
+            "subject": "Información sobre cotización",
+            "html": export_html(object_element)
+        })
+
+        print('responseEmail', responseEmail)
+
+        return True
+    except:
+        return False
 handler = Mangum(app)
