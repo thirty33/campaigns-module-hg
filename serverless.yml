@@ -41,10 +41,13 @@ constructs:
         type: queue
         worker:
             handler: lambdas/sendEmail/handler.sendEmail
-            timeout: 7
+            layers:
+              - { Ref: PythonRequirementsLambdaLayer }
+            timeout: 10
             package:
               patterns:
-                - "lambdas/sendEmail/handler.py"
+                - "lambdas/sendEmail/**"
+        maxRetries: 1
 
 plugins:
   - serverless-dotenv-plugin
