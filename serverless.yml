@@ -16,6 +16,10 @@ provider:
     table_transaction_name: CampaignTransaction
     user_transaction_name: CampaignUser
     FRONT_URL: ${env:FRONT_URL}
+    QUEUE_URL: ${construct:quote-message-queue.queueUrl}
+    RESEND_API_KEY: ${env:RESEND_API_KEY}
+    FROM_EMAIL: ${env:FROM_EMAIL}
+    TO_EMAIL: ${env:TO_EMAIL}
   iam:
     role:
       statements:
@@ -41,7 +45,7 @@ constructs:
             package:
               patterns:
                 - "lambdas/sendEmail/handler.py"
-  
+
 plugins:
   - serverless-dotenv-plugin
   - serverless-ignore
@@ -160,7 +164,6 @@ functions:
     runtime: python3.8
     environment:
       STAGE: ${self:provider.stage}
-      QUEUE_URL: ${construct:quote-message-queue.queueUrl}
     layers:
       - { Ref: PythonRequirementsLambdaLayer }
     package:
