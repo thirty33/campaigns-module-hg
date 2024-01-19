@@ -46,7 +46,7 @@ constructs:
             timeout: 7
             package:
               patterns:
-                - "lambdas/sendEmail/handler.py"
+                - "lambdas/sendEmail/**"
 
 plugins:
   - serverless-dotenv-plugin
