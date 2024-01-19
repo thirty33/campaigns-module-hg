@@ -11,7 +11,7 @@ import json
 from typing import Dict
 from fastapi.middleware.cors import CORSMiddleware
 import resend
-from lambdas.sendEmail.helpers.template import export_html
+# from lambdas.sendEmail.helpers.template import export_html
 
 resend.api_key = os.environ["RESEND_API_KEY"]
 STAGE = os.environ.get('STAGE')
@@ -135,25 +135,26 @@ def login_user(
     # })
 
 
-@app.post('/test-message/send', tags=['message'])
-def send_message(
-    sub: str = Depends(get_current_user),
-    token: str = ''
-):
-    try:
-        body_string = '{\n  "Title": "quote",\n  "Category": "1",\n  "Bank": "1",\n  "DateTransaction": "2023-01-01 10:30:50",\n  "Description": "Description",\n  "nombreApellido": "dasd",\n  "email": "test@test.com",\n  "genero": "masculino",\n  "Telefono": "+51",\n  "numeroTelefonico": "213123122",\n  "ciudadOrigen": "dsads",\n  "ciudadDestino": "dasdsa",\n  "tipoViaje": "Viaje de ida",\n  "fechaSalida": "2023-01-01 10:30:50",\n  "fechaRegreso": "2023-02-27 20:30:50",\n  "optionViaje": "Plan completo (vuelos, hotel y tours)",\n  "recibirCotizacion": "WhatsApp",\n  "amountPersons": "1",\n  "Uid": "179320c2-7b3b-4195-aaed-a6ef32e2033b"\n}'
-        object_element = json.loads(body_string)
+# @app.post('/test-message/send', tags=['message'])
+# def send_message(
+#     sub: str = Depends(get_current_user),
+#     token: str = ''
+# ):
+#     try:
+#         body_string = '{\n  "Title": "quote",\n  "Category": "1",\n  "Bank": "1",\n  "DateTransaction": "2023-01-01 10:30:50",\n  "Description": "Description",\n  "nombreApellido": "dasd",\n  "email": "test@test.com",\n  "genero": "masculino",\n  "Telefono": "+51",\n  "numeroTelefonico": "213123122",\n  "ciudadOrigen": "dsads",\n  "ciudadDestino": "dasdsa",\n  "tipoViaje": "Viaje de ida",\n  "fechaSalida": "2023-01-01 10:30:50",\n  "fechaRegreso": "2023-02-27 20:30:50",\n  "optionViaje": "Plan completo (vuelos, hotel y tours)",\n  "recibirCotizacion": "WhatsApp",\n  "amountPersons": "1",\n  "Uid": "179320c2-7b3b-4195-aaed-a6ef32e2033b"\n}'
+#         object_element = json.loads(body_string)
 
-        responseEmail = resend.Emails.send({
-            "from": FROM_EMAIL,
-            "to": TO_EMAIL,
-            "subject": "Información sobre cotización",
-            "html": export_html(object_element)
-        })
+#         responseEmail = resend.Emails.send({
+#             "from": FROM_EMAIL,
+#             "to": TO_EMAIL,
+#             "subject": "Información sobre cotización",
+#             "html": export_html(object_element)
+#         })
 
-        print('responseEmail', responseEmail)
+#         print('responseEmail', responseEmail)
 
-        return True
-    except:
-        return False
+#         return True
+#     except:
+#         return False
+    
 handler = Mangum(app)
