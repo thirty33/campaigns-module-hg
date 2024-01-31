@@ -91,7 +91,7 @@ class Transaction(BaseModel):
         }
         
 class LoginRequest(BaseModel):
-    email: str = Field(default="joell@test.co",min_length=5, max_length=20)
+    email: str = Field(default="joell@test.co",min_length=5, max_length=100)
     password: str = Field(default="k2m=@[7C!sQX",min_length=4, max_length=100)
     class Config:
         json_schema_extra = {
