@@ -14,6 +14,8 @@ def sendEmail(event, context):
         body = event['Records'][0]['body']
         object_element = json.loads(body)
 
+        print(object_element['email'])
+
         responseEmailToAdmin = resend.Emails.send({
             "from": FROM_EMAIL,
             "to": TO_EMAIL,
